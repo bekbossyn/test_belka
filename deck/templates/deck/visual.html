@@ -1,0 +1,58 @@
+{% load static %}
+<!doctype html>
+    <html lang="en">
+      <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Base Template</title>
+        {% include "base/css.html" %}
+        {% block base_head %} {% endblock %}
+      </head>
+      <body>
+        {% include "base/navbar.html" with brand_name="Generated hands of NEW DECK" %}
+        {% block content %} {% endblock %}
+
+        <div class="container">
+            <div class="row">
+                {% for hand in hand_01 %}
+                    <div class="col-1">
+                        <img src="{{ hand.url }}" width="150" height="200"/>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <hr/>
+
+            <div class="row">
+                {% for hand in hand_02 %}
+                    <div class="col-1">
+                        <img src="{{ hand.url }}" width="150" height="200"/>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <hr/>
+
+            <div class="row">
+                {% for hand in hand_03 %}
+                    <div class="col-1">
+                        <img src="{{ hand.url }}" width="150" height="200"/>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <hr/>
+
+            <div class="row">
+                {% for hand in hand_04 %}
+                    <div class="col-1">
+                        <img src="{{ hand.url }}" width="150" height="200"/>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% include "base/js.html" %}
+      </body>
+    </html>
