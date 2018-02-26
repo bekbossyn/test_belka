@@ -23,6 +23,22 @@ class Deck(models.Model):
     def __str__(self):
         return u"PK={}".format(self.pk)
 
+    def json(self):
+        return {
+            "deck_id": self.pk,
+            "trump": self.trump,
+            "hand01": self.hand01,
+            "hand02": self.hand02,
+            "hand03": self.hand03,
+            "hand04": self.hand04,
+            "next_move": self.next_move,
+            "moves": self.moves,
+        }
+
+    def allowed_list(self, moves_count=0):
+        
+        return list()
+
     def card_to_number(self, suit, card_number):
         card = dict()
         card["value"] = suit[0] * 100 + card_number[0]
@@ -167,18 +183,6 @@ class Deck(models.Model):
         suit = number // 100
         card = number % 100
         return suit, card
-
-    def json(self):
-        return {
-            "deck_id": self.pk,
-            "trump": self.trump,
-            "hand01": self.hand01,
-            "hand02": self.hand02,
-            "hand03": self.hand03,
-            "hand04": self.hand04,
-            "next_move": self.next_move,
-            "moves": self.moves,
-        }
 
 
 @receiver(pre_save, sender=Deck)

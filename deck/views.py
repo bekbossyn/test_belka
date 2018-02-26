@@ -25,7 +25,7 @@ def test_visual(request):
 
 @http.json_response()
 @csrf_exempt
-def generate(request):
+def generate_deck(request):
     trump = int(request.POST.get("trump", 1))
     deck = Deck.objects.create(trump=trump)
 
@@ -43,20 +43,11 @@ def make_move(request):
     except ObjectDoesNotExist:
         return http.code_response(code=codes.BAD_REQUEST, message=messages.DECK_NOT_FOUND)
     moves_count = deck.moves["moves_count"]
-    if moves_count == 0:
-        next_move = deck.next_move
-        if next_move == 1:
-            hand = deck.hand01
-        elif next_move == 2:
-            hand = deck.hand02
-        elif next_move == 3:
-            hand = deck.hand03
-        else:
-            hand = deck.hand03
-    else:
-        pass
+
+    allowed_hand_list = deck.allowed_list(moves_count)
 
     return {
+        "allowed": allowed_hand_list,
         "deck": deck.json(),
     }
 
