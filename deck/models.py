@@ -35,8 +35,14 @@ class Deck(models.Model):
             "moves": self.moves,
         }
 
-    def allowed_list(self, moves_count=0):
-        
+    def allowed_hand_list(self, moves_count=0):
+        next_move = self.next_move
+        current_hand = getattr(self, "hand0{}".format(next_move))
+        if moves_count % 4 == 0:
+            return current_hand
+        else:
+            moves_made = moves_count % 4
+
         return list()
 
     def card_to_number(self, suit, card_number):

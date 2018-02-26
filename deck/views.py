@@ -1,3 +1,5 @@
+import random
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -42,7 +44,7 @@ def generate_deck(request):
     except:
         return http.code_response(code=codes.BAD_REQUEST, message=messages.INVALID_PARAMS, field="trump")
     deck = Deck.objects.create(trump=trump)
-
+    test_visual()
     return {
         "deck": deck.json(),
     }
@@ -58,8 +60,10 @@ def make_move(request):
         return http.code_response(code=codes.BAD_REQUEST, message=messages.DECK_NOT_FOUND)
     moves_count = deck.moves["moves_count"]
 
-    allowed_hand_list = deck.allowed_list(moves_count)
-
+    allowed_hand_list = deck.allowed_hand_list(moves_count)
+    move = random.randint(0, len(allowed_hand_list) - 1)
+    allowed_hand_list.remove(allowed_hand_list[move])
+    # deck.save()
     return {
         "allowed": allowed_hand_list,
         "deck": deck.json(),
