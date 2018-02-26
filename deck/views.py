@@ -12,8 +12,16 @@ def test(request):
     return HttpResponse("<h1>test</h1>")
 
 
+@csrf_exempt
 def test_visual(request):
-    deck = Deck.objects.last()
+    try:
+        deck_id = int(request.GET.get("deck_id") or request.POST.get("deck_id"))
+        deck = Deck.objects.get(id=deck_id)
+    except ObjectDoesNotExist:
+        deck = Deck.objects.last()
+    except:
+        deck = Deck.objects.last()
+    # except
     context = {
         "hand_01": deck.hand01,
         "hand_02": deck.hand02,
