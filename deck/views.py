@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from deck.models import Deck
 
 from utils import http, codes, messages
+from utils.constants import SUITS
 
 
 def test(request):
@@ -34,7 +35,12 @@ def test_visual(request):
 @http.json_response()
 @csrf_exempt
 def generate_deck(request):
-    trump = int(request.POST.get("trump", 1))
+    try:
+        trump = int(request.POST.get("trump", 1))
+        if trump not in [suit[0] for suit in SUITS]:
+            return http.code_response(code=codes.BAD_REQUEST, message=messages.INVALID_PARAMS, field="trump")
+    except:
+        return http.code_response(code=codes.BAD_REQUEST, message=messages.INVALID_PARAMS, field="trump")
     deck = Deck.objects.create(trump=trump)
 
     return {
