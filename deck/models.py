@@ -46,6 +46,8 @@ class Deck(models.Model):
         current_suit = next_move - (total_moves % 4)
         if current_suit < 1:
             current_suit += 4
+
+        # TODO get allowed list
         print(current_suit)
 
         my_list = list()
