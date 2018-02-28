@@ -18,7 +18,7 @@ class Deck(models.Model):
     hand03 = JSONField(default=dict({}))
     hand04 = JSONField(default=dict({}))
     next_move = models.IntegerField(choices=MOVES_QUEUE, blank=True, null=True, default=HAND01)
-    moves = JSONField(default=dict({}))
+    total_moves = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return u"PK={}".format(self.pk)
@@ -32,18 +32,25 @@ class Deck(models.Model):
             "hand03": self.hand03,
             "hand04": self.hand04,
             "next_move": self.next_move,
-            "moves": self.moves,
+            "total_moves": self.total_moves,
         }
 
-    def allowed_hand_list(self, moves_count=0):
+    def allowed_hand_list(self):
         next_move = self.next_move
+        total_moves = self.total_moves
         current_hand = getattr(self, "hand0{}".format(next_move))
-        if moves_count % 4 == 0:
+        if total_moves % 4 == 0:
+            #   Allowed list all
             return current_hand
-        else:
-            moves_made = moves_count % 4
 
-        return list()
+        current_suit = next_move - (total_moves % 4)
+        if current_suit < 1:
+            current_suit += 4
+        print(current_suit)
+
+        my_list = list()
+
+        return my_list
 
     def card_to_number(self, suit, card_number):
         card = dict()
@@ -208,7 +215,4 @@ def set_info_details(sender, instance, **kwargs):
         instance.hand03 = instance.special_sort(my_deck["hand_03"])
         instance.hand04 = instance.special_sort(my_deck["hand_04"])
 
-        instance.moves["moves_count"] = 0
-        # instance.moves["next_move"] = HAND01
-
-
+        instance.total_moves = 0

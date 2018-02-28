@@ -44,7 +44,7 @@ def generate_deck(request):
     except:
         return http.code_response(code=codes.BAD_REQUEST, message=messages.INVALID_PARAMS, field="trump")
     deck = Deck.objects.create(trump=trump)
-    test_visual()
+    # return test_visual(request)
     return {
         "deck": deck.json(),
     }
@@ -58,9 +58,7 @@ def make_move(request):
         deck = Deck.objects.get(pk=(request.POST.get("deck_id") or request.GET.get("deck_id")))
     except ObjectDoesNotExist:
         return http.code_response(code=codes.BAD_REQUEST, message=messages.DECK_NOT_FOUND)
-    moves_count = deck.moves["moves_count"]
-
-    allowed_hand_list = deck.allowed_hand_list(moves_count)
+    allowed_hand_list = deck.allowed_hand_list()
     move = random.randint(0, len(allowed_hand_list) - 1)
     allowed_hand_list.remove(allowed_hand_list[move])
     # deck.save()
