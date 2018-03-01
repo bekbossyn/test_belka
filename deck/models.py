@@ -27,13 +27,50 @@ class Deck(models.Model):
         return {
             "deck_id": self.pk,
             "trump": self.trump,
-            "hand01": self.hand01,
-            "hand02": self.hand02,
-            "hand03": self.hand03,
-            "hand04": self.hand04,
+            "hand01": self.get_active_hand(self.hand01),
+            "hand02": self.get_active_hand(self.hand02),
+            "hand03": self.get_active_hand(self.hand03),
+            "hand04": self.get_active_hand(self.hand04),
             "next_move": self.next_move,
             "total_moves": self.total_moves,
         }
+
+    def deactivate(self, my_dict):
+        #   Now HARDCODE, TODO MAKE SIMPLE AND ORGANIZED
+        value = my_dict["value"]
+        for hand in self.hand01:
+            if hand["value"] == value:
+                hand["active"] = False
+                return
+        for hand in self.hand02:
+            if hand["value"] == value:
+                hand["active"] = False
+                return
+        for hand in self.hand03:
+            if hand["value"] == value:
+                hand["active"] = False
+                return
+        for hand in self.hand04:
+            if hand["value"] == value:
+                hand["active"] = False
+                return
+        print(type(my_dict))
+        pass
+        # my_list[index]["active"] = False
+
+    def get_active_hand(self, my_hand):
+        my_filtered_hand = list()
+        for i in my_hand:
+            if i["active"]:
+                my_filtered_hand.append(i)
+        return my_filtered_hand
+
+    def get_active_list(self, my_list):
+        my__filtered_list = list()
+        for i in my_list:
+            if i["active"] is True:
+                my__filtered_list.append(i)
+        return my__filtered_list
 
     def allowed_hand_list(self):
         next_move = self.next_move
@@ -41,7 +78,7 @@ class Deck(models.Model):
         current_hand = getattr(self, "hand0{}".format(next_move))
         if total_moves % 4 == 0:
             #   Allowed list all
-            return current_hand
+            return self.get_active_list(current_hand)
 
         current_suit = next_move - (total_moves % 4)
         if current_suit < 1:
@@ -74,6 +111,7 @@ class Deck(models.Model):
             card["trump_priority"] = 2 * 1000
         elif card["name"] == "jack_of_diamonds":
             card["trump_priority"] = 1 * 1000
+        card["active"] = True
         return card
 
     def special_sort(self, hand):
