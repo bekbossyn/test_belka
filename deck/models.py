@@ -11,12 +11,35 @@ from django.dispatch import receiver
 from utils.constants import SUITS, CARD_NUMBERS, SPADES_VALUE, CLUBS_VALUE, HEARTS_VALUE, MOVES_QUEUE, HAND01
 
 
+class Card(models.Model):
+
+    deck = models.ForeignKey('Deck',
+                             blank=True,
+                             null=True,
+                             db_index=True,
+                             related_name='cards',
+                             on_delete=models.CASCADE)
+
+    value = models.IntegerField(blank=True, null=True)
+    worth = models.IntegerField(blank=True, null=True)
+    name = models.CharField(blank=True, null=True)
+    url = models.CharField(max_length=255, blank=True, null=True)
+    active = models.BooleanField(blank=True, null=True, db_index=True, default=True)
+
+    def __str__(self):
+        return u"PK={}".format(self.pk)
+
+
 class Deck(models.Model):
     trump = models.SmallIntegerField(default=1)
-    hand01 = JSONField(default=dict({}))
-    hand02 = JSONField(default=dict({}))
-    hand03 = JSONField(default=dict({}))
-    hand04 = JSONField(default=dict({}))
+    hand01 = ArrayField(Card)
+    hand02 = ArrayField(Card)
+    hand03 = ArrayField(Card)
+    hand04 = ArrayField(Card)
+    # hand01 = JSONField(default=dict({}))
+    # hand02 = JSONField(default=dict({}))
+    # hand03 = JSONField(default=dict({}))
+    # hand04 = JSONField(default=dict({}))
     next_move = models.IntegerField(choices=MOVES_QUEUE, blank=True, null=True, default=HAND01)
     total_moves = models.IntegerField(blank=True, null=True)
 

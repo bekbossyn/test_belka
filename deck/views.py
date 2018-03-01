@@ -26,10 +26,14 @@ def test_visual(request):
         deck = Deck.objects.last()
     # except
     context = {
-        "hand_01": deck.get_active_hand(deck.hand01),
-        "hand_02": deck.get_active_hand(deck.hand02),
-        "hand_03": deck.get_active_hand(deck.hand03),
-        "hand_04": deck.get_active_hand(deck.hand04),
+        # "hand_01": deck.get_active_hand(deck.hand01),
+        # "hand_02": deck.get_active_hand(deck.hand02),
+        # "hand_03": deck.get_active_hand(deck.hand03),
+        # "hand_04": deck.get_active_hand(deck.hand04),
+        "hand_01": deck.hand01,
+        "hand_02": deck.hand02,
+        "hand_03": deck.hand03,
+        "hand_04": deck.hand04,
     }
     return render(request, "deck/visual.html", context)
 
